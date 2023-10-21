@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+  </head>
+  <body>
+    <h1>Profile</h1>
+    <% if (user) { %>
+    <p>Welcome, <%= user.displayName %></p>
+    <p>Email: <%= user.email %></p>
+    <a href="/auth0session-logout">Logout</a>
+
+    <!-- Display ID Token, Access Token, Auth0 Session, and Local Session -->
+    <h2>ID Token:</h2>
+    <pre><%= idToken %></pre>
+
+    <h2>Access Token:</h2>
+    <pre><%= accessToken %></pre>
+
+    <h2>Auth0 Session:</h2>
+    <pre><%= JSON.stringify(auth0Session, null, 2) %></pre>
+
+    <h2>Local Session:</h2>
+    <pre><%= JSON.stringify(localSession, null, 2) %></pre>
+
+    <% } else { %>
+    <p>You are not logged in.</p>
+    <p><a href="/login">Login</a> to access your profile.</p>
+    <% } %>
+  </body>
+</html>

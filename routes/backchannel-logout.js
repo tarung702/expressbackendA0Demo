@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
           // Extract session ID from the decoded token
           const sid = decoded.sid;
 
-          // TODO: Implement your session cleanup logic here
+          // Session cleanup logic here
           req.session.destroy((err) => {
             if (err) {
               console.error('Error destroying session:', err);

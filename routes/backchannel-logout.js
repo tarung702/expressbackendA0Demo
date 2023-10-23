@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
       },
       (err, decoded) => {
         if (err) {
-          console.error('Invalid logout token:', err);
+          console.error('Invalid logout token to BCL endpoint:', err);
           return res.status(400).json({
             error: 'Invalid logout token',
             logoutToken: logoutToken,
@@ -42,27 +42,37 @@ router.post('/', async (req, res) => {
             // Destroy the Auth0 session
             activeSessions[sessionID].destroy((err) => {
               if (err) {
-                console.error('Error destroying Auth0 session:', err);
+                console.error(
+                  'Error destroying Auth0 session via BCL endpoint:',
+                  err
+                );
               }
-              console.log(`Auth0 Session ${sessionID} destroyed.`);
+              console.log(
+                `Auth0 Session ${sessionID} destroyed via BCL endpoint.`
+              );
             });
           }
 
-          console.log('All Auth0 sessions destroyed.');
+          console.log('All Auth0 sessions destroyed via BCL endpoint.');
 
           // Now, destroy the local session
           req.session.destroy((err) => {
             if (err) {
               console.error('Error destroying local session:', err);
             }
-            console.log(`Local session ${req.sessionID} destroyed.`);
+            console.log(
+              `Local session ${req.sessionID} destroyed via BCL endpoint.`
+            );
           });
 
-          console.log('Local session destroyed.');
+          console.log('Local session destroyed via BCL endpoint.');
 
           return res
             .status(200)
-            .json({ message: 'All user sessions destroyed successfully' });
+            .json({
+              message:
+                'All user sessions destroyed successfully via BCL endpoint',
+            });
         }
       }
     );

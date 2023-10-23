@@ -5,11 +5,11 @@ const router = express.Router();
 router.get('/', (req, res) => {
   // Add code here to end the Auth0 session
 
-  const auth0Config = {
-    domain: 'raah-poc.us.auth0.com', // Replace with your Auth0 domain
-    clientId: 'sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr', // Replace with your Auth0 client ID
-    returnTo: 'https://expressbackenda0demo.adaptable.app/localsession-logout', // Redirect to local-logout route
-  };
+  // const auth0Config = {
+  //   domain: 'raah-poc.us.auth0.com', // Replace with your Auth0 domain
+  //   clientId: 'sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr', // Replace with your Auth0 client ID
+  //   returnTo: 'https://expressbackenda0demo.adaptable.app/localsession-logout', // Redirect to local-logout route
+  // };
 
   const logoutUrl = `https://raah-poc.us.auth0.com/v2/logout?client_id=sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr&returnTo=https://expressbackenda0demo.adaptable.app/localsession-logout`;
 

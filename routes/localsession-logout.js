@@ -6,6 +6,8 @@ const { activeSessions } = require('../app');
 
 // Local Logout route
 router.get('/', (req, res) => {
+  console.log('req.sessionID:', req.sessionID);
+  console.log('activeSessions keys:', Object.keys(activeSessions));
   // Check if the user's session exists in activeSessions
   if (req.sessionID in activeSessions) {
     activeSessions[req.sessionID].destroy((err) => {

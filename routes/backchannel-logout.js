@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa'); // Add jwks-rsa module
+const jwksClient = require('jwks-rsa');
+
+// Import the activeSessions object from app.js
+const { activeSessions } = require('../app');
 
 // Backchannel Logout Endpoint
 router.post('/', async (req, res) => {
@@ -34,20 +37,20 @@ router.post('/', async (req, res) => {
             logoutToken: logoutToken,
           });
         } else {
-          // Extract session ID from the decoded token
-          const sid = decoded.sid;
+          // Loop through all active sessions and destroy them
+          for (const sessionID in activeSessions) {
+            activeSessions[sessionID].destroy((err) => {
+              if (err) {
+                console.error('Error destroying session:', err);
+              }
+              console.log(`Session ${sessionID} destroyed.`);
+            });
+          }
 
-          // Session cleanup logic here
-          req.session.destroy((err) => {
-            if (err) {
-              console.error('Error destroying session:', err);
-              return res.status(500).json({ error: 'Internal server error' });
-            }
-            console.log(`Session ${sid} destroyed.`);
-
-            // Redirect to the local session logout route
-            res.redirect('/localsession-logout');
-          });
+          console.log('All active sessions destroyed.');
+          return res
+            .status(200)
+            .json({ message: 'All user sessions destroyed successfully' });
         }
       }
     );

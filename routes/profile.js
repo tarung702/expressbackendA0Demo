@@ -10,12 +10,17 @@ router.get('/', (req, res) => {
   const auth0Session = req.user ? req.user.auth0Session : null; // Get Auth0 session
   const localSession = req.session ? req.session : null; // Get Local session
 
+  // Access the activeSessions object here
+
+  const activeSessions = req.app.get('activeSessions');
+
   res.render('profile', {
     user: req.user,
     idToken,
     accessToken,
     auth0Session,
     localSession,
+    activeSessions,
   });
 });
 

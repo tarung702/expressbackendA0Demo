@@ -11,6 +11,8 @@ const MemoryStore = require('memorystore')(session);
 const app = express();
 const port = process.env.PORT || 3000;
 
+const activeSessions = {};
+
 // Configure Express
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -57,6 +59,10 @@ passport.use(
         auth0Session: req.session, // Store Auth0 Session
         refreshToken: refreshToken,
       };
+
+      // Store the session in the centralized storage
+      activeSessions[req.sessionID] = req.session;
+
       return done(null, user);
     }
   )

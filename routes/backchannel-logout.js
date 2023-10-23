@@ -44,9 +44,9 @@ router.post('/', async (req, res) => {
               return res.status(500).json({ error: 'Internal server error' });
             }
             console.log(`Session ${sid} destroyed.`);
-            return res
-              .status(200)
-              .json({ message: 'User logged out successfully' });
+
+            // Redirect to the local session logout route
+            res.redirect('/localsession-logout');
           });
         }
       }

@@ -37,28 +37,29 @@ router.post('/', async (req, res) => {
             logoutToken: logoutToken,
           });
         } else {
-          // Loop through all active sessions and destroy them
+          // Loop through all active sessions and destroy the Auth0 sessions
           for (const sessionID in activeSessions) {
             // Destroy the Auth0 session
             activeSessions[sessionID].destroy((err) => {
               if (err) {
-                console.error('Error destroying session:', err);
+                console.error('Error destroying Auth0 session:', err);
               }
               console.log(`Auth0 Session ${sessionID} destroyed.`);
             });
-
-            // Destroy the local session
-            if (req.sessionID === sessionID) {
-              req.session.destroy((err) => {
-                if (err) {
-                  console.error('Error destroying local session:', err);
-                }
-                console.log(`Local session ${sessionID} destroyed.`);
-              });
-            }
           }
 
-          console.log('All active sessions destroyed.');
+          console.log('All Auth0 sessions destroyed.');
+
+          // Now, destroy the local session
+          req.session.destroy((err) => {
+            if (err) {
+              console.error('Error destroying local session:', err);
+            }
+            console.log(`Local session ${req.sessionID} destroyed.`);
+          });
+
+          console.log('Local session destroyed.');
+
           return res
             .status(200)
             .json({ message: 'All user sessions destroyed successfully' });

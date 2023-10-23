@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
       } else {
         console.log(`Local session ${req.sessionID} destroyed.`);
+        res.status(200).send('<p>Logged out locally successfully.</p>');
         res.status(200).json({ message: 'Logged out locally.' });
       }
     });

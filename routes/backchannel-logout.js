@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     Buffer.from(logoutToken.split('.')[0], 'base64').toString('utf-8')
   );
   const kid = header.kid;
-  const jwksUrl = `https://${auth0Config.domain}/.well-known/jwks.json`; // Replace with your Auth0 domain
+  const jwksUrl = `https://raah-poc.us.auth0.com/.well-known/jwks.json`;
   const jwksResponse = await fetch(jwksUrl);
   const jwks = await jwksResponse.json();
 

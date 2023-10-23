@@ -36,7 +36,7 @@ const auth0Config = {
   clientID: 'sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr',
   clientSecret:
     'rBvqCEyHFoo0gu4uEPq83zkuPfGVpQxOaVxnjvSH9jxXrpNyXDOOMOzda2VF1zBn',
-  callbackURL: 'http://localhost:3000/callback', // Update with your callback URL
+  callbackURL: 'https://expressbackenda0demo.adaptable.app/callback', // Update with your callback URL
 };
 
 // Inside the Auth0 authentication callback

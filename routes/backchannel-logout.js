@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const fetch = require('isomorphic-fetch');
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa'); // Add jwks-rsa module
 

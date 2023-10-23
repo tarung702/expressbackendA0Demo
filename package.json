@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.2",
     "memorystore": "^1.6.7",
     "passport": "^0.6.0",
-    "passport-auth0": "^1.4.3"
+    "passport-auth0": "^1.4.3",
+    "jwks-rsa": "^2.0.5"
   }
 }

@@ -2,55 +2,60 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('isomorphic-fetch');
 const jwt = require('jsonwebtoken');
+const jwksClient = require('jwks-rsa'); // Add jwks-rsa module
 
 // Backchannel Logout Endpoint
 router.post('/', async (req, res) => {
   const logoutToken = req.body.logout_token;
 
-  // Extract kid from the header and fetch the JWKS
-  const header = JSON.parse(
-    Buffer.from(logoutToken.split('.')[0], 'base64').toString('utf-8')
-  );
-  const kid = header.kid;
-  const jwksUrl = `https://raah-poc.us.auth0.com/.well-known/jwks.json`;
-  const jwksResponse = await fetch(jwksUrl);
-  const jwks = await jwksResponse.json();
-
-  // Find the public key based on kid
-  const publicKey = jwks.keys.find((key) => key.kid === kid);
-
-  if (!publicKey) {
-    return res.status(400).json({ error: 'Invalid kid in the logout token' });
-  }
-
-  // Verify the logout token signature
-  const verifyToken = (token, publicKey) => {
-    try {
-      jwt.verify(token, publicKey);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  };
-
-  const isValidToken = verifyToken(logoutToken, publicKey);
-
-  if (!isValidToken) {
-    return res.status(400).json({ error: 'Invalid logout token signature' });
-  }
-
-  // Get the session ID from the token and destroy the session
-  const sid = JSON.parse(
-    Buffer.from(logoutToken.split('.')[1], 'base64').toString('utf-8')
-  ).sid;
-
-  req.session.destroy((err) => {
-    if (err) {
-      console.error('Error destroying session:', err);
-      return res.status(500).json({ error: 'Internal server error' });
-    }
-    return res.status(200).json({ message: 'User logged out successfully' });
+  // Create a JWKS client
+  const client = jwksClient({
+    jwksUri: 'https://raah-poc.us.auth0.com/.well-known/jwks.json',
   });
+
+  try {
+    // Verify and decode the logout token
+    jwt.verify(
+      logoutToken,
+      (header, callback) => {
+        // Use the JWKS client to get the public key
+        client.getSigningKey(header.kid, (err, key) => {
+          if (err) {
+            return callback(err);
+          }
+          const signingKey = key.publicKey || key.rsaPublicKey;
+          callback(null, signingKey);
+        });
+      },
+      (err, decoded) => {
+        if (err) {
+          console.error('Invalid logout token:', err);
+          return res.status(400).json({
+            error: 'Invalid logout token',
+            logoutToken: logoutToken,
+          });
+        } else {
+          // Extract session ID from the decoded token
+          const sid = decoded.sid;
+
+          // TODO: Implement your session cleanup logic here
+          req.session.destroy((err) => {
+            if (err) {
+              console.error('Error destroying session:', err);
+              return res.status(500).json({ error: 'Internal server error' });
+            }
+            console.log(`Session ${sid} destroyed.`);
+            return res
+              .status(200)
+              .json({ message: 'User logged out successfully' });
+          });
+        }
+      }
+    );
+  } catch (error) {
+    console.error('Error handling backchannel-logout:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

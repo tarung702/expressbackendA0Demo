@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
     returnTo: 'https://expressbackenda0demo.adaptable.app/localsession-logout', // Redirect to local-logout route
   };
 
-  const logoutUrl = `https://raah-poc.us.auth0.com/v2/logout?client_id=sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr&returnTo=https://expressbackenda0demo.adaptable.app/callback`;
+  const logoutUrl = `https://raah-poc.us.auth0.com/v2/logout?client_id=sIKzinA6Ps8x7A3CEJP4Cc6H4VeRYRUr&returnTo=https://expressbackenda0demo.adaptable.app/profile`;
 
   // Redirect to Auth0 logout URL to end the Auth0 session
   res.redirect(logoutUrl);

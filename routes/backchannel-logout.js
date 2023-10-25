@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
 // Import the session manager module
-const sessionManager = require('../sessionManager');
+const sessionManager = require('../sessionManager').default;
 
 // Backchannel Logout Endpoint
 router.post('/', async (req, res) => {

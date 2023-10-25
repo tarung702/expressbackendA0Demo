@@ -1,9 +1,9 @@
-const session = require('express-session');
+import session from 'express-session';
 const MemoryStore = require('memorystore')(session);
 
 const activeSessions = {};
 
-module.exports = {
+export default {
   activeSessions,
   sessionStore: new MemoryStore({
     checkPeriod: 86400000, // Prune expired entries every 24 hours

@@ -11,7 +11,7 @@ const MemoryStore = require('memorystore')(session);
 const app = express();
 const port = process.env.PORT || 3000;
 
-const sessionManager = require('./sessionManager').default; // Import the session manager module
+const sessionManager = require('./sessionManager'); // Import the session manager module
 
 // Configure Express
 app.set('views', path.join(__dirname, 'views'));

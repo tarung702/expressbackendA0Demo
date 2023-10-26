@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
         } else {
           // Loop through all active sessions and destroy the Auth0 sessions
           for (const sessionID in activeSessions) {
+            console.log(`this is the sessionID: ${sessionID}`);
             // Destroy the Auth0 session
             activeSessions[sessionID].destroy((err) => {
               if (err) {

@@ -11,7 +11,7 @@ const MemoryStore = require('memorystore')(session);
 const app = express();
 const port = process.env.PORT || 3000;
 
-const sessionManager = require('./sessionManager'); // Import the session manager module
+const activeSessions = {};
 
 // Configure Express
 app.set('views', path.join(__dirname, 'views'));
@@ -60,8 +60,8 @@ passport.use(
         refreshToken: refreshToken,
       };
 
-      // Store the session using the session manager
-      sessionManager.storeSession(req.sessionID, req.session);
+      // Store the session in the centralized storage
+      activeSessions[req.sessionID] = req.session;
 
       return done(null, user);
     }

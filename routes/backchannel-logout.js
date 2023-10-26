@@ -3,8 +3,8 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
-// Import the session manager module
-const sessionManager = require('../sessionManager');
+// Import the activeSessions object from app.js
+const { activeSessions } = require('../app');
 
 // Backchannel Logout Endpoint
 router.post('/', async (req, res) => {
@@ -38,16 +38,25 @@ router.post('/', async (req, res) => {
           });
         } else {
           // Loop through all active sessions and destroy the Auth0 sessions
-          sessionManager.destroyAuth0Sessions((sessionID) => {
-            console.log(
-              `Auth0 Session ${sessionID} destroyed via BCL endpoint.`
-            );
-          });
+          for (const sessionID in activeSessions) {
+            // Destroy the Auth0 session
+            activeSessions[sessionID].destroy((err) => {
+              if (err) {
+                console.error(
+                  'Error destroying Auth0 session via BCL endpoint:',
+                  err
+                );
+              }
+              console.log(
+                `Auth0 Session ${sessionID} destroyed via BCL endpoint.`
+              );
+            });
+          }
 
           console.log('All Auth0 sessions destroyed via BCL endpoint.');
 
           // Now, destroy the local session
-          sessionManager.destroyLocalSession(req.sessionID, (err) => {
+          req.session.destroy((err) => {
             if (err) {
               console.error('Error destroying local session:', err);
             }
